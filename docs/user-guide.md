@@ -52,7 +52,7 @@ To stop TaskFlow, return to the terminal window and press **Ctrl+C**.
 
 ## Create a task
 
-To create a task, send a request with a task title. You can also add an optional description.
+To create a task, send a request with a task title. You can also add an optional description and an optional priority.
 
 1. Send a `POST` request to `/tasks`. Include a JSON body that contains a `title` value. To add a description, include a `description` value:
 
@@ -62,18 +62,21 @@ To create a task, send a request with a task title. You can also add an optional
      -d '{"title": "Buy milk", "description": "Two liters of whole milk"}'
    ```
 
-2. Check the response. TaskFlow returns the new task with an ID, the title, the description, and a `completed` value set to `false`:
+2. Check the response. TaskFlow returns the new task with an ID, the title, the description, the priority, and a `completed` value set to `false`:
 
    ```json
    {
      "id": 1,
      "title": "Buy milk",
      "description": "Two liters of whole milk",
+     "priority": "medium",
      "completed": false
    }
    ```
 
 If you don't include a `description` value, TaskFlow saves the task with an empty description (`""`).
+
+If you don't include a `priority` value, TaskFlow saves the task with the priority `medium`. To set a different priority, include a `priority` value in the JSON body, for example `"priority": "high"`. TaskFlow doesn't check the value, so it accepts any value you send and returns that value in the response.
 
 TaskFlow assigns each new task a unique ID. The ID increases by one for each task you create. You need the ID to complete or delete a task.
 
@@ -100,12 +103,14 @@ TaskFlow returns a list of all tasks in the order you created them:
     "id": 1,
     "title": "Buy milk",
     "description": "Two liters of whole milk",
+    "priority": "medium",
     "completed": false
   },
   {
     "id": 2,
     "title": "Write report",
     "description": "",
+    "priority": "medium",
     "completed": true
   }
 ]
@@ -130,6 +135,7 @@ TaskFlow returns the updated task, with `completed` set to `true`:
   "id": 1,
   "title": "Buy milk",
   "description": "Two liters of whole milk",
+  "priority": "medium",
   "completed": true
 }
 ```
