@@ -52,25 +52,28 @@ To stop TaskFlow, return to the terminal window and press **Ctrl+C**.
 
 ## Create a task
 
-To create a task, send a request with a task title.
+To create a task, send a request with a task title. You can also add an optional description.
 
-1. Send a `POST` request to `/tasks`. Include a JSON body that contains a `title` value:
+1. Send a `POST` request to `/tasks`. Include a JSON body that contains a `title` value. To add a description, include a `description` value:
 
    ```bash
    curl -X POST http://127.0.0.1:5000/tasks \
      -H "Content-Type: application/json" \
-     -d '{"title": "Buy milk"}'
+     -d '{"title": "Buy milk", "description": "Two liters of whole milk"}'
    ```
 
-2. Check the response. TaskFlow returns the new task with an ID, the title, and a `completed` value set to `false`:
+2. Check the response. TaskFlow returns the new task with an ID, the title, the description, and a `completed` value set to `false`:
 
    ```json
    {
      "id": 1,
      "title": "Buy milk",
+     "description": "Two liters of whole milk",
      "completed": false
    }
    ```
+
+If you don't include a `description` value, TaskFlow saves the task with an empty description (`""`).
 
 TaskFlow assigns each new task a unique ID. The ID increases by one for each task you create. You need the ID to complete or delete a task.
 
@@ -96,11 +99,13 @@ TaskFlow returns a list of all tasks in the order you created them:
   {
     "id": 1,
     "title": "Buy milk",
+    "description": "Two liters of whole milk",
     "completed": false
   },
   {
     "id": 2,
     "title": "Write report",
+    "description": "",
     "completed": true
   }
 ]
@@ -124,6 +129,7 @@ TaskFlow returns the updated task, with `completed` set to `true`:
 {
   "id": 1,
   "title": "Buy milk",
+  "description": "Two liters of whole milk",
   "completed": true
 }
 ```
