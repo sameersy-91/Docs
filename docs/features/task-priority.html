@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Priority – Feature Guide</title>
+  <style>
+    body {
+      font-family: Segoe UI, Arial, sans-serif;
+      line-height: 1.6;
+      color: #1f2328;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+    }
+    h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.5rem; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3rem; margin-top: 2rem; }
+    h3 { font-size: 1.15rem; margin-top: 1.5rem; }
+    code, pre {
+      font-family: Consolas, "Courier New", monospace;
+      background: #f6f8fa;
+      border-radius: 4px;
+    }
+    code { padding: 0.1rem 0.3rem; }
+    pre { padding: 0.75rem 1rem; overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+    th, td { border: 1px solid #d0d7de; padding: 0.5rem 0.75rem; text-align: left; vertical-align: top; }
+    th { background: #f6f8fa; }
+    .meta { color: #57606a; font-size: 0.9rem; }
+    .note { background: #fff8c5; border-left: 4px solid #d4a72c; padding: 0.5rem 1rem; margin: 1rem 0; }
+    footer { margin-top: 3rem; color: #57606a; font-size: 0.85rem; border-top: 1px solid #d0d7de; padding-top: 1rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Task Priority</h1>
+  <p class="meta">Feature guide for TaskFlow users. Sources: Jira SCRUM-1 "Add task priority" and the Confluence page "Task Priority – Functional Specification".</p>
+</header>
+
+<main>
+
+<section id="overview">
+  <h2>Feature overview</h2>
+  <p>Task priority lets you assign an importance level to a task so you can identify the tasks that need your attention first.</p>
+  <p>Three priority levels are supported:</p>
+  <ul>
+    <li>High</li>
+    <li>Medium</li>
+    <li>Low</li>
+  </ul>
+  <p>All TaskFlow users can create and update task priorities. No additional permissions are required.</p>
+</section>
+
+<section id="prerequisites">
+  <h2>Prerequisites</h2>
+  <ul>
+    <li>You are a TaskFlow user.</li>
+    <li>No additional permissions are required.</li>
+  </ul>
+</section>
+
+<section id="how-it-works">
+  <h2>How the feature works</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Priority</th>
+        <th>Meaning</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>High</td>
+        <td>The task requires immediate attention.</td>
+      </tr>
+      <tr>
+        <td>Medium</td>
+        <td>The task has normal importance. This is the default.</td>
+      </tr>
+      <tr>
+        <td>Low</td>
+        <td>The task can be completed when time permits.</td>
+      </tr>
+    </tbody>
+  </table>
+  <ul>
+    <li>If you do not specify a priority when you create a task, TaskFlow assigns <strong>Medium</strong>.</li>
+    <li>When you update a task's priority, the new value replaces the existing one.</li>
+    <li>When you retrieve a task, the response includes its priority.</li>
+  </ul>
+</section>
+
+<section id="procedures">
+  <h2>Procedures</h2>
+
+  <h3>Create a task with a priority</h3>
+  <ol>
+    <li>Provide the task title.</li>
+    <li>Provide a <code>priority</code> value of <code>High</code>, <code>Medium</code>, or <code>Low</code>.</li>
+    <li>Submit the request to create the task.</li>
+  </ol>
+  <p>Example request:</p>
+  <pre><code>{
+  "title": "Prepare monthly report",
+  "priority": "High"
+}</code></pre>
+
+  <h3>Create a task without a priority</h3>
+  <ol>
+    <li>Provide the task title without a <code>priority</code> value.</li>
+    <li>Submit the request to create the task. TaskFlow assigns the task a priority of <strong>Medium</strong>.</li>
+  </ol>
+
+  <h3>Update the priority of an existing task</h3>
+  <ol>
+    <li>Identify the task whose priority you want to change.</li>
+    <li>Set the new priority to <code>High</code>, <code>Medium</code>, or <code>Low</code>.</li>
+    <li>Save the change. The new priority replaces the existing value.</li>
+  </ol>
+</section>
+
+<section id="expected-results">
+  <h2>Expected results</h2>
+  <ul>
+    <li>A task created with a valid priority has that priority.</li>
+    <li>A task created without a priority has <strong>Medium</strong>.</li>
+    <li>After an update, the task returns the new priority. For example, a task changed from Medium to High is returned with High.</li>
+    <li>A task response includes the <code>priority</code> field, for example <code>"priority": "High"</code>.</li>
+  </ul>
+  <p>Example response:</p>
+  <pre><code>{
+  "id": 1,
+  "title": "Prepare monthly report",
+  "completed": false,
+  "priority": "High"
+}</code></pre>
+</section>
+
+<section id="limitations">
+  <h2>Limitations and considerations</h2>
+  <ul>
+    <li>You cannot create custom priority levels. Only High, Medium, and Low are supported.</li>
+    <li>Priority does not change automatically based on a task's due date.</li>
+    <li>When the feature is enabled, existing tasks are assigned Medium priority.</li>
+  </ul>
+</section>
+
+<section id="troubleshooting">
+  <h2>Troubleshooting</h2>
+  <h3>Request rejected with an unsupported priority value</h3>
+  <p>TaskFlow accepts only High, Medium, and Low. If you provide any other value, the request is rejected with this error:</p>
+  <pre><code>{
+  "error": "Priority must be High, Medium, or Low."
+}</code></pre>
+  <p>Correct the value to one of the three supported levels and submit the request again.</p>
+</section>
+
+<div class="note">
+  <strong>Note:</strong> The functional specification shows the priority value as a field in the request and response bodies. It does not describe the user interface controls for setting priority.
+</div>
+
+</main>
+
+<footer>
+  <p>Source references:</p>
+  <ul>
+    <li>Jira: SCRUM-1, "Add task priority" (acceptance criteria and definition of done).</li>
+    <li>Confluence: "Task Priority – Functional Specification" (page ID 1638401, version 1).</li>
+  </ul>
+</footer>
+
+</body>
+</html>
