@@ -118,7 +118,21 @@ TaskFlow returns a list of all tasks in the order you created them:
 
 If you haven't created any tasks, or if you deleted all of them, TaskFlow returns an empty list: `[]`.
 
-TaskFlow doesn't provide a way to view a single task, filter tasks, or sort tasks.
+### Filter tasks by priority
+
+To view only the tasks with a specific priority, add a `priority` query parameter to the request. Use one of the following values: `low`, `medium`, or `high`.
+
+```bash
+curl "http://127.0.0.1:5000/tasks?priority=high"
+```
+
+TaskFlow returns only the tasks whose priority matches the value you specify, in the order you created them. If no task has that priority, TaskFlow returns an empty list: `[]`.
+
+The filter is case-sensitive and matches the stored priority exactly. Use lowercase values. When you create a task, TaskFlow doesn't check the priority value. A task created with `"priority": "High"` is stored as `High`, so `?priority=high` doesn't return it.
+
+If you specify a value other than `low`, `medium`, or `high`, TaskFlow returns an error. See [Troubleshooting](#troubleshooting).
+
+TaskFlow doesn't provide a way to view a single task or sort tasks.
 
 ## Complete a task
 
@@ -168,3 +182,4 @@ The following errors are defined in the TaskFlow source code.
 |---|---|---|
 | `A task title is required.` (HTTP 400) | You create a task without a `title` value, or the `title` value is empty. | Include a non-empty `title` in the JSON body of your request. |
 | `Task not found.` (HTTP 404) | You complete or delete a task, and no task has the ID you specified. | Run `GET /tasks` to view the current tasks and their IDs. Then use an ID from the list. Note that the ID is missing if you deleted the task or restarted TaskFlow. |
+| `Invalid priority. Use low, medium, or high.` (HTTP 400) | You filter tasks with a `priority` value other than `low`, `medium`, or `high`. This includes an empty value. | Use one of the three lowercase values in the `priority` query parameter. |
